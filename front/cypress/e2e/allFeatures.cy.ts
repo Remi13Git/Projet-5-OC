@@ -155,7 +155,7 @@ describe('Auth and Session Management spec', () => {
       cy.wait('@updateSessionRequest').its('response.statusCode').should('eq', 200)
 
   
-      // 5. Vérification de la page de DÉTAIL avec l'ID 1
+      // 6. Vérification de la page de DÉTAIL avec l'ID 1
       cy.intercept('GET', '/api/session/1', {
         statusCode: 200,
         body: updatedSession,
@@ -165,7 +165,7 @@ describe('Auth and Session Management spec', () => {
       cy.get('mat-card').contains('Detail').click()
 
   
-      // 6. Vérification la suppression d'une session
+      // 7. Vérification la suppression d'une session
       cy.intercept('DELETE', '/api/session/1', {
         statusCode: 200,
         body: {},
