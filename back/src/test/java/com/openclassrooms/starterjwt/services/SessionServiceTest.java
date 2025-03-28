@@ -1,6 +1,5 @@
-package com.openclassrooms.starterjwt;
+package com.openclassrooms.starterjwt.services;
 
-import com.openclassrooms.starterjwt.services.SessionService;
 import com.openclassrooms.starterjwt.exception.BadRequestException;
 import com.openclassrooms.starterjwt.exception.NotFoundException;
 import com.openclassrooms.starterjwt.models.Session;
@@ -17,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 
 @SpringBootTest
-public class SessionServiceIntegrationTest {
+public class SessionServiceTest {
 
     @Autowired
     private SessionService sessionService;

@@ -1,8 +1,7 @@
-package com.openclassrooms.starterjwt;
+package com.openclassrooms.starterjwt.models;
 
 import org.junit.jupiter.api.Test;
 
-import com.openclassrooms.starterjwt.models.Teacher;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;

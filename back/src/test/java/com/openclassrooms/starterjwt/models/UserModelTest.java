@@ -1,6 +1,4 @@
-package com.openclassrooms.starterjwt;
-
-import com.openclassrooms.starterjwt.models.User;
+package com.openclassrooms.starterjwt.models;
 
 import java.time.LocalDateTime;
 
