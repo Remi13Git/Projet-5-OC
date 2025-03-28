@@ -1,4 +1,4 @@
-package com.openclassrooms.starterjwt;
+package com.openclassrooms.starterjwt.payload;
 
 import com.openclassrooms.starterjwt.payload.response.JwtResponse;
 import org.junit.jupiter.api.Test;

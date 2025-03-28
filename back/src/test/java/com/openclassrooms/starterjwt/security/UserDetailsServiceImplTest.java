@@ -1,4 +1,4 @@
-package com.openclassrooms.starterjwt;
+package com.openclassrooms.starterjwt.security;
 
 import com.openclassrooms.starterjwt.security.services.UserDetailsServiceImpl;
 import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
