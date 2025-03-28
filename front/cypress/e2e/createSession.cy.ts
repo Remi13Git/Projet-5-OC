@@ -1,5 +1,5 @@
-describe('Login spec', () => {
-    it('should log in an user', () => {
+describe('Create Session spec', () => {
+    it('should create a session', () => {
 
       // 1. Test de connexion réussie
       cy.visit('/login')
@@ -38,5 +38,29 @@ describe('Login spec', () => {
       cy.get('button[type="submit"]').click()
       cy.wait('@loginRequest')
       cy.url().should('include', '/sessions')
+
+      // 2. Test de création de session
+      cy.get('button').contains('Create').click()
+      cy.wait('@teachersRequest')
+      cy.get('mat-select[formControlName=teacher_id]').click()
+      cy.get('mat-option').contains('New User').click()
+      const newSession = {
+        id: 3,
+        name: 'Yoga Session',
+        description: 'Relaxation and stretching',
+        date: '2025-03-23',
+        teacher_id: 1,
+      }
+      cy.intercept('POST', '/api/session', {
+        statusCode: 200,
+        body: newSession,
+      }).as('createSessionRequest')
+      cy.get('input[formControlName=name]').type('Yoga Session')
+      cy.get('input[formControlName=date]').type('2025-03-23')
+      cy.get('textarea[formControlName=description]').type('Relaxation and stretching')
+      cy.get('button[type="submit"]').click()
+      cy.wait('@createSessionRequest').its('response.statusCode').should('eq', 200)
+      cy.url().should('include', '/sessions')
+
     });
 });

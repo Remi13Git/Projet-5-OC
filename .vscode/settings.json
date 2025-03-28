@@ -1,5 +1,12 @@
 {
     "java.compile.nullAnalysis.mode": "disabled",
     "java.configuration.updateBuildConfiguration": "interactive",
-    "java.configuration.runtimes": []
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-1.8",
+            "path": "/Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home",
+            "default": true
+        }
+    ],
+    "liveServer.settings.port": 5501
 }

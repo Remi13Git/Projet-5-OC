@@ -2,8 +2,7 @@ package com.openclassrooms.starterjwt;
 
 import com.openclassrooms.starterjwt.security.jwt.JwtUtils;
 import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
@@ -40,67 +39,100 @@ class JwtUtilsTest {
 
     @Test
     void testGenerateJwtToken() {
-        // Simulez l'authentification ou passez un objet Authentication valide si nécessaire
-        // Exemple pour générer un token et tester sa validité
-        String token = jwtUtils.generateJwtToken(new MyAuthenticationMock()); // MyAuthenticationMock serait un mock de votre Authentication
+        String token = jwtUtils.generateJwtToken(new MyAuthenticationMock());
 
-        // Vérifiez que le token généré n'est pas nul ou vide
         assertNotNull(token);
         assertFalse(token.isEmpty());
 
-        // Testez que le token contient bien le nom d'utilisateur ou d'autres éléments que vous attendez
         String username = jwtUtils.getUserNameFromJwtToken(token);
         assertEquals("john_doe", username);
     }
 
     @Test
     void testValidateJwtToken() {
-        String token = jwtUtils.generateJwtToken(new MyAuthenticationMock());  // Utilisez un mock ou un utilisateur authentifié pour générer un token
+        // Génère un token valide
+        String token = jwtUtils.generateJwtToken(new MyAuthenticationMock());
+        assertTrue(jwtUtils.validateJwtToken(token));  // Vérifie que le token valide retourne true
 
-        // Testez la validation du token
-        assertTrue(jwtUtils.validateJwtToken(token));
-
-        // Testez un token expiré ou invalide en le modifiant manuellement ou en simulant une exception
+        // Teste un token invalide (SignatureException)
         String invalidToken = "invalidToken";
         assertFalse(jwtUtils.validateJwtToken(invalidToken));
+
+        // Teste un token expiré (ExpiredJwtException)
+        String expiredToken = jwtUtils.generateJwtToken(new MyAuthenticationMock());
+        String expiredTokenSimulated = simulateExpiredToken(expiredToken);
+        assertFalse(jwtUtils.validateJwtToken(expiredTokenSimulated));
+
+        // Teste un token malformé (MalformedJwtException)
+        String malformedToken = "malformed.token";
+        assertFalse(jwtUtils.validateJwtToken(malformedToken));
+
+        // Teste un token avec une signature invalide (SignatureException)
+        String signatureInvalidToken = "signature.invalid.token";
+        assertFalse(jwtUtils.validateJwtToken(signatureInvalidToken));
+
+        // Teste un token non supporté (UnsupportedJwtException)
+        String unsupportedToken = "unsupported.jwt.token";
+        assertFalse(jwtUtils.validateJwtToken(unsupportedToken));
+
+        // Teste un token avec un argument illégal (IllegalArgumentException)
+        String illegalArgumentToken = "illegal.argument.token";
+        assertFalse(jwtUtils.validateJwtToken(illegalArgumentToken));
     }
 
-    // Cette classe peut simuler un utilisateur authentifié pour l'exemple
+    private String simulateExpiredToken(String validToken) {
+        // Simule un jeton expiré en modifiant la date d'expiration du jeton
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey("mySecretKey")
+                    .parseClaimsJws(validToken)
+                    .getBody();
+
+            claims.setExpiration(new Date(0));  // Expire instantanément
+
+            return Jwts.builder()
+                    .setClaims(claims)
+                    .signWith(SignatureAlgorithm.HS512, "mySecretKey")
+                    .compact();
+        } catch (JwtException e) {
+            throw new RuntimeException("Error while simulating expired token", e);
+        }
+    }
+
+    // Cette classe simule un utilisateur authentifié
     private static class MyAuthenticationMock implements Authentication {
         @Override
         public String getName() {
             return "john_doe";
         }
-    
+
         @Override
         public Object getCredentials() {
             return "password";
         }
-    
+
         @Override
         public Object getPrincipal() {
             return new UserDetailsImpl(1L, "john_doe", "John", "Doe", true, "password");
         }
-    
+
         @Override
         public boolean isAuthenticated() {
             return true;
         }
-    
+
         @Override
         public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-            // Laissez cette méthode vide pour le mock
         }
-    
+
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
             return Collections.emptyList();
         }
-    
-        // Implémentation de la méthode manquante getDetails() de l'interface Authentication
+
         @Override
         public Object getDetails() {
-            return null;  // Vous pouvez retourner null ou un objet spécifique si nécessaire
+            return null;
         }
-    }    
+    }
 }

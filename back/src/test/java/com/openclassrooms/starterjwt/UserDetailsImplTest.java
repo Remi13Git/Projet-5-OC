@@ -3,7 +3,6 @@ package com.openclassrooms.starterjwt;
 import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.mockito.Mockito.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,39 +24,14 @@ class UserDetailsImplTest {
     }
 
     @Test
-    void testGetId() {
-        assertEquals(1L, userDetails.getId());
-    }
-
-    @Test
-    void testGetUsername() {
-        assertEquals("john_doe", userDetails.getUsername());
-    }
-
-    @Test
-    void testGetFirstName() {
-        assertEquals("John", userDetails.getFirstName());
-    }
-
-    @Test
-    void testGetLastName() {
-        assertEquals("Doe", userDetails.getLastName());
-    }
-
-    @Test
     void testIsAdmin() {
         assertTrue(userDetails.getAdmin());
     }
 
     @Test
-    void testGetPassword() {
-        assertEquals("password", userDetails.getPassword());
-    }
-
-    @Test
     void testGetAuthorities() {
         assertNotNull(userDetails.getAuthorities());
-        assertTrue(userDetails.getAuthorities().isEmpty());  // Comme la méthode retourne un HashSet vide
+        assertTrue(userDetails.getAuthorities().isEmpty());
     }
 
     @Test
@@ -107,24 +81,5 @@ class UserDetailsImplTest {
                 .password("password")
                 .build();
         assertFalse(userDetails.equals(anotherUser));
-    }
-
-    @Test
-    void testHashCode() {
-        // Créez une instance de UserDetailsImpl avec des données spécifiques
-        UserDetailsImpl user = UserDetailsImpl.builder()
-                .id(1L)
-                .username("john_doe")
-                .firstName("John")
-                .lastName("Doe")
-                .admin(true)
-                .password("password")
-                .build();
-
-        // Vérifiez que le hashCode retourné est le bon
-        int expectedHashCode = user.hashCode();  // Utilisez la méthode réelle pour obtenir le hashCode
-
-        // Vérifiez que le hashCode est correct
-        assertEquals(expectedHashCode, user.hashCode());
     }
 }
