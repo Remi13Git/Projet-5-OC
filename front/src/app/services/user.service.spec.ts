@@ -5,7 +5,6 @@ import { UserService } from './user.service';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../interfaces/user.interface';
 
-// Mocked response data
 const mockUser: User = {
   id: 1,
   firstName: 'John',
@@ -35,7 +34,6 @@ describe('UserService', () => {
   });
 
   it('should call getById and return the correct user', () => {
-    // Spy on the HttpClient's get method
     const spyGet = jest.spyOn(httpClient, 'get').mockReturnValue(of(mockUser));
 
     const id = '1';
@@ -43,12 +41,10 @@ describe('UserService', () => {
       expect(user).toEqual(mockUser);
     });
 
-    // Check if the get method was called with the correct URL
     expect(spyGet).toHaveBeenCalledWith('api/user/1');
   });
 
   it('should call delete and return null', () => {
-    // Spy on the HttpClient's delete method
     const spyDelete = jest.spyOn(httpClient, 'delete').mockReturnValue(of(null));
 
     const id = '1';
@@ -56,7 +52,6 @@ describe('UserService', () => {
       expect(response).toBeNull();
     });
 
-    // Check if the delete method was called with the correct URL
     expect(spyDelete).toHaveBeenCalledWith('api/user/1');
   });
 });

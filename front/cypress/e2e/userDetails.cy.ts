@@ -1,5 +1,5 @@
-describe('Login spec', () => {
-    it('should log in an user', () => {
+describe('User Details spec', () => {
+    it('should view the user account details', () => {
 
       // 1. Test de connexion réussie
       cy.visit('/login')
@@ -38,5 +38,26 @@ describe('Login spec', () => {
       cy.get('button[type="submit"]').click()
       cy.wait('@loginRequest')
       cy.url().should('include', '/sessions')
+
+      // 2. Test de récupération des informations de l'utilisateur
+      cy.intercept('GET', '/api/user/1', {
+        statusCode: 200,
+        body: {
+          id: 1,
+          email: 'newuser@studio.com',
+          lastName: 'User',
+          firstName: 'New',
+          admin: true,
+          password: 'test!1234',
+          createdAt: '2023-01-01T00:00:00.000Z',
+          updatedAt: '2023-01-01T00:00:00.000Z',
+        },
+      }).as('getUserRequest')
+  
+      // Cliquer sur "Account" et vérifier les informations de l'utilisateur
+      cy.get('span[routerlink="me"]').click()
+  
+      // Attendre la requête GET et vérifier la réponse
+      cy.wait('@getUserRequest').its('response.statusCode').should('eq', 200)
     });
 });

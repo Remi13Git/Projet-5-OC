@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith(MockitoExtension.class)  // Assurez-vous que Mockito est utilisé avec JUnit 5
+@ExtendWith(MockitoExtension.class) 
 public class TeacherControllerTest {
 
     @Mock

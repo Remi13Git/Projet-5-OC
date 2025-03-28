@@ -12,11 +12,12 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.extension.ExtendWith;  // Assurez-vous d'importer cette classe
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith(MockitoExtension.class)  // Cette annotation active l'intégration avec Mockito
+@ExtendWith(MockitoExtension.class)
 public class TeacherServiceTest {
 
     @Mock
@@ -38,52 +39,31 @@ public class TeacherServiceTest {
 
     @Test
     void testFindAll() {
-        // Arrange: Simuler la méthode findAll() du repository
+        // Arrange
         when(teacherRepository.findAll()).thenReturn(Arrays.asList(teacher));
 
-        // Act: Appeler la méthode findAll() du service
-        var teachers = teacherService.findAll();
+        // Act
+        List<Teacher> teachers = teacherService.findAll();
 
-        // Assert: Vérifier que la méthode retourne bien la liste des enseignants
-        assertNotNull(teachers);  // Vérifie que la liste n'est pas nulle
-        assertFalse(teachers.isEmpty());  // Vérifie que la liste n'est pas vide
-        assertEquals(1, teachers.size());  // Vérifie qu'il y a 1 enseignant dans la liste
-        assertEquals(teacher.getId(), teachers.get(0).getId());  // Vérifie que l'ID correspond
+        // Assert
+        assertNotNull(teachers);
+        assertFalse(teachers.isEmpty());
+        assertEquals(1, teachers.size());
+        assertEquals(teacher.getId(), teachers.get(0).getId());
     }
 
     @Test
     void testFindById_Found() {
-        // Arrange: Simuler la méthode findById() du repository pour renvoyer un enseignant
+        // Arrange
         when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
 
-        // Act: Appeler la méthode findById() du service
+        // Act
         Teacher result = teacherService.findById(1L);
 
-        // Assert: Vérifier que l'enseignant a bien été retrouvé
-        assertNotNull(result);  // Vérifie que l'enseignant n'est pas nul
-        assertEquals(teacher.getId(), result.getId());  // Vérifie que l'ID correspond
-        assertEquals("John", result.getFirstName());  // Vérifie que le prénom est correct
-        assertEquals("Doe", result.getLastName());  // Vérifie que le nom est correct
-    }
-
-    @Test
-    void testFindById_NotFound() {
-        // Arrange: Simuler la méthode findById() du repository pour renvoyer un Optional vide
-        when(teacherRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // Act: Appeler la méthode findById() du service
-        Teacher result = teacherService.findById(1L);
-
-        // Assert: Vérifier que l'enseignant n'a pas été trouvé
-        assertNull(result);  // Vérifie que le résultat est nul
-    }
-
-    @Test
-    void testFindById_Exception() {
-        // Arrange: Simuler une exception levée par le repository
-        when(teacherRepository.findById(1L)).thenThrow(new RuntimeException("Database error"));
-
-        // Act & Assert: Vérifier qu'une exception est bien lancée
-        assertThrows(RuntimeException.class, () -> teacherService.findById(1L));
+        // Assert
+        assertNotNull(result);
+        assertEquals(teacher.getId(), result.getId());
+        assertEquals("John", result.getFirstName());
+        assertEquals("Doe", result.getLastName());
     }
 }

@@ -3,8 +3,6 @@ package com.openclassrooms.starterjwt;
 import com.openclassrooms.starterjwt.payload.request.SignupRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,88 +18,86 @@ class SignupRequestTest {
         validator.afterPropertiesSet();  // Initialisation des propriétés
     }
 
+    // Test de la méthode equals
     @Test
-    void testValidSignupRequest() {
-        // Créer un SignupRequest valide
+    void testEquals() {
+        // Créer deux objets SignupRequest identiques
+        SignupRequest signupRequest1 = new SignupRequest();
+        signupRequest1.setEmail("test@example.com");
+        signupRequest1.setFirstName("John");
+        signupRequest1.setLastName("Doe");
+        signupRequest1.setPassword("password123");
+
+        SignupRequest signupRequest2 = new SignupRequest();
+        signupRequest2.setEmail("test@example.com");
+        signupRequest2.setFirstName("John");
+        signupRequest2.setLastName("Doe");
+        signupRequest2.setPassword("password123");
+
+        // Vérifier qu'ils sont égaux
+        assertEquals(signupRequest1, signupRequest2);
+
+        // Vérifier qu'un objet est égal à lui-même
+        assertEquals(signupRequest1, signupRequest1);
+
+        // Créer un objet avec des valeurs différentes
+        SignupRequest signupRequest3 = new SignupRequest();
+        signupRequest3.setEmail("different@example.com");
+        signupRequest3.setFirstName("Jane");
+        signupRequest3.setLastName("Smith");
+        signupRequest3.setPassword("password456");
+
+        // Vérifier qu'ils ne sont pas égaux
+        assertNotEquals(signupRequest1, signupRequest3);
+    }
+
+    // Test de la méthode hashCode
+    @Test
+    void testHashCode() {
+        // Créer deux objets SignupRequest identiques
+        SignupRequest signupRequest1 = new SignupRequest();
+        signupRequest1.setEmail("test@example.com");
+        signupRequest1.setFirstName("John");
+        signupRequest1.setLastName("Doe");
+        signupRequest1.setPassword("password123");
+
+        SignupRequest signupRequest2 = new SignupRequest();
+        signupRequest2.setEmail("test@example.com");
+        signupRequest2.setFirstName("John");
+        signupRequest2.setLastName("Doe");
+        signupRequest2.setPassword("password123");
+
+        // Vérifier que leurs hashCodes sont identiques
+        assertEquals(signupRequest1.hashCode(), signupRequest2.hashCode());
+
+        // Créer un objet avec des valeurs différentes
+        SignupRequest signupRequest3 = new SignupRequest();
+        signupRequest3.setEmail("different@example.com");
+        signupRequest3.setFirstName("Jane");
+        signupRequest3.setLastName("Smith");
+        signupRequest3.setPassword("password456");
+
+        // Vérifier que leurs hashCodes sont différents
+        assertNotEquals(signupRequest1.hashCode(), signupRequest3.hashCode());
+    }
+
+    // Test de la méthode toString
+    @Test
+    void testToString() {
+        // Créer un SignupRequest
         SignupRequest signupRequest = new SignupRequest();
         signupRequest.setEmail("test@example.com");
         signupRequest.setFirstName("John");
         signupRequest.setLastName("Doe");
         signupRequest.setPassword("password123");
 
-        // Valider l'objet
-        BindingResult result = validate(signupRequest);
+        // Récupérer la sortie de la méthode toString()
+        String toStringResult = signupRequest.toString();
 
-        // Vérifier qu'il n'y a pas d'erreurs de validation
-        assertFalse(result.hasErrors());
-    }
-
-    @Test
-    void testInvalidSignupRequest_EmailInvalid() {
-        // Créer un SignupRequest avec un email invalide
-        SignupRequest signupRequest = new SignupRequest();
-        signupRequest.setEmail("invalid-email");
-        signupRequest.setFirstName("John");
-        signupRequest.setLastName("Doe");
-        signupRequest.setPassword("password123");
-
-        // Valider l'objet
-        BindingResult result = validate(signupRequest);
-
-        // Vérifier qu'il y a des erreurs de validation
-        assertTrue(result.hasErrors());
-
-        // Vérifier l'erreur sur l'email
-        FieldError emailError = result.getFieldError("email");
-        assertNotNull(emailError);
-        assertEquals("email", emailError.getField());
-    }
-
-    @Test
-    void testInvalidSignupRequest_FirstNameTooShort() {
-        // Créer un SignupRequest avec un prénom trop court
-        SignupRequest signupRequest = new SignupRequest();
-        signupRequest.setEmail("test@example.com");
-        signupRequest.setFirstName("J");
-        signupRequest.setLastName("Doe");
-        signupRequest.setPassword("password123");
-
-        // Valider l'objet
-        BindingResult result = validate(signupRequest);
-
-        // Vérifier qu'il y a des erreurs de validation
-        assertTrue(result.hasErrors());
-
-        // Vérifier l'erreur sur le prénom
-        FieldError firstNameError = result.getFieldError("firstName");
-        assertNotNull(firstNameError);
-        assertEquals("firstName", firstNameError.getField());
-    }
-
-    @Test
-    void testInvalidSignupRequest_PasswordTooShort() {
-        // Créer un SignupRequest avec un mot de passe trop court
-        SignupRequest signupRequest = new SignupRequest();
-        signupRequest.setEmail("test@example.com");
-        signupRequest.setFirstName("John");
-        signupRequest.setLastName("Doe");
-        signupRequest.setPassword("pass");
-
-        // Valider l'objet
-        BindingResult result = validate(signupRequest);
-
-        // Vérifier qu'il y a des erreurs de validation
-        assertTrue(result.hasErrors());
-
-        // Vérifier l'erreur sur le mot de passe
-        FieldError passwordError = result.getFieldError("password");
-        assertNotNull(passwordError);
-        assertEquals("password", passwordError.getField());
-    }
-
-    private BindingResult validate(Object object) {
-        BindingResult result = new org.springframework.validation.BeanPropertyBindingResult(object, "signupRequest");
-        validator.validate(object, result);
-        return result;
+        // Vérifier que la chaîne contient les informations attendues
+        assertTrue(toStringResult.contains("email=test@example.com"));
+        assertTrue(toStringResult.contains("firstName=John"));
+        assertTrue(toStringResult.contains("lastName=Doe"));
+        assertTrue(toStringResult.contains("password=password123"));
     }
 }

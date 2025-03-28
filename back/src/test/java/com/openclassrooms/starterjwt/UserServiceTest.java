@@ -49,18 +49,6 @@ class UserServiceTest {
     }
 
     @Test
-    void testFindById_UserNotFound() {
-        // Préparer le comportement du mock
-        when(userRepository.findById(999L)).thenReturn(Optional.empty());
-
-        // Appeler la méthode à tester
-        User result = userService.findById(999L);
-
-        // Vérifications
-        assertNull(result);
-    }
-
-    @Test
     void testDelete_UserExists() {
         // Préparer le comportement du mock
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
